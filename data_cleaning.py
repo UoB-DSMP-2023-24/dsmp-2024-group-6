@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv("./vdjdb-2023-06-01/vdjdb.txt", sep='	')
+df = pd.read_csv("../vdjdb-2023-06-01/vdjdb.txt", sep='	')
 
 def check_alpha_cdr3(item):
     # Check if it starts with C and ends with F or W
@@ -39,11 +39,11 @@ for index, row in df.iterrows():
             is_v_alpha_valid = check_v_alpha(str(row['v.segm']))
 
         if not is_cdr3_valid:
-            row['is_cdr3_alpha_valid'] = 0
+            df.at[index, 'is_cdr3_alpha_valid'] = 0
             count_cdr3_invalid += 1
 
         if not is_v_alpha_valid:
-            # row["is_v_alpha_valid"] = 0
+            # df.at[index, "is_v_alpha_valid"] = 0
             count_v_alpha_invalid += 1
 
 
@@ -51,13 +51,13 @@ for index, row in df.iterrows():
 
     if not is_mhc_a_valid:
         count_mhc_a_invalid += 1
-        row["is_mhc_a_valid"] = 0
+        df.at[index, "is_mhc_a_valid"] = 0
 
     is_mhc_class_valid = check_mhc_class(row['mhc.class'])
 
     if not is_mhc_class_valid:
         count_mhc_class_invalid += 1
-        # row["is_mhc_class_valid"] = 0
+        # df.at[index, "is_mhc_class_valid"] = 0
 
 print("-" * 50)
 print("count_cdr3_valid: ", count_cdr3_invalid)
@@ -70,6 +70,8 @@ print("count_mhc_class_valid: ", count_mhc_class_invalid)
 print("-" * 50)
 
 print(df)
+
+df.to_csv("./df_cleaned.csv", sep='\t')
 
 print()
 
