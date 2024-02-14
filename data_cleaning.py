@@ -71,7 +71,7 @@ print("-" * 50)
 
 print(df)
 
-df.to_csv("./df_cleaned.csv", sep='\t')
+df.to_csv("./data_clean.csv", sep='\t')
 
 print()
 
