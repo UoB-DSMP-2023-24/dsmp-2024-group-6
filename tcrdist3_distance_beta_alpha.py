@@ -11,11 +11,11 @@ if __name__ == '__main__':
 
     '''data processing'''
 
-    condition = (df['gene'] == "TRB") & (~df['v.segm'].isnull()) & (~df['j.segm'].isnull()) & (
-                df['species'] == "HomoSapiens")
+    # condition = (df['gene'] == "TRB") & (~df['v.segm'].isnull()) & (~df['j.segm'].isnull()) & (
+    #             df['species'] == "HomoSapiens") & (df['complex.id'] != 0)
 
     trb_data = df[(df['gene'] == 'TRB') & (~df['v.segm'].isnull()) & (~df['j.segm'].isnull()) & (
-                df['species'] == "HomoSapiens")]
+                df['species'] == "HomoSapiens") & (df['complex.id'] != 0)]
 
     result_df = pd.DataFrame(columns=['id', 'cdr3_b_aa', 'v_b_gene', 'j_b_gene', 'cdr3_a_aa', 'v_a_gene', 'j_a_gene'] +
                                      ['species', 'mhc.a', 'mhc.b', 'mhc.class', 'antigen.epitope', 'antigen.gene',
@@ -56,6 +56,8 @@ if __name__ == '__main__':
         #     break
 
     print(result_df)
+
+    result_df.to_csv('./data_tcrdist3.csv', sep='\t', index=False)
 
     # Define TCRrep
     tr = TCRrep(cell_df=result_df,
