@@ -231,7 +231,7 @@ def count_hla_carriers(patient_array, patient_hla_hash, hla):
     return count
 
 def load_hla_hash(hla_file, hla_array, patient_array, patient_hla_hash):
-    with open(r'C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\bin\hla.txt', 'r') as f:
+    with open(hla_file, 'r') as f:
         lines = f.readlines()
     unique_hlas = set()
     patient_hlas = {}
@@ -285,22 +285,22 @@ def GatherOptions():
 
 convergence_file, clone_annotation_file, individual_hlas, pdepth, motif_pvalue_file = GatherOptions()
 
-motif_p = loadMotifs(r'C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\bin\gliph-input-kmer-resample-1000-minp0.001-ove10.txt')
+motif_p = loadMotifs(motif_pvalue_file)
 
-convergence_groups = loadFile(r'C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\bin\gliph-input-convergence-groups.txt')
-clone_annotation_lines = loadFile(r'C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\bin\gliph_input-clone-network.txt')
+convergence_groups = loadFile(convergence_file)
+clone_annotation_lines = loadFile(clone_annotation_file)
 
 hlas = []
 patients = []
 patient_hla = {}
 load_hla_hash(individual_hlas, hlas, patients, patient_hla)
 
-background_vgene_frequencies = getDefaultBackgroundFreqs(r"C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\db/tcrb-human.v-freq.txt")
+background_vgene_frequencies = getDefaultBackgroundFreqs("rootdir/db/tcrb-human.v-freq.txt")
 
 if clone_annotation_file:
     pass
 
-background_cdr3_frequencies = getDefaultBackgroundFreqs(r"C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\db\tcrb-human.cdr3len-freq.txt")
+background_cdr3_frequencies = getDefaultBackgroundFreqs("rootdir/db/tcrb-human.cdr3len-freq.txt")
 
 if clone_annotation_file:
     pass
@@ -313,7 +313,6 @@ for c in range(len(convergence_groups)):
         crg_unique_clones = getUniqueClonesInConvergenceGroup(cdr3_list, clone_annotation_lines)
         print(f"\t{len(crg_subject_array)} subjects and {len(crg_unique_clones)} clones")
         motifs_here = {}
-        motif_list = loadMotifs(r'C:\Users\james\OneDrive\Documents\Bristol\Mini Project\gliph-master\gliph-master\gliph-1.0\gliph\bin\gliph-input.txt')
         for m in range(len(motif_list)):
             for clone in crg_unique_clones:
                 if motif_list[m] in clone:
