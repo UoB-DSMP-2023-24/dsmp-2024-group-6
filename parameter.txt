@@ -1,0 +1,21 @@
+gliph_version	2
+result_folder	C:/Users/james/OneDrive/Documents/Bristol/Mini Project/Team Code/turbogliph2/
+ref_cluster_size	original
+sim_depth	1000
+lcminp	0.01
+lcminove	1000,100,10
+motif_distance_cutoff	3
+kmer_mindepth	3
+accept_sequences_with_C_F_start_end	TRUE
+min_seq_length	7
+structboundaries	TRUE
+boundary_size	3
+motif_length	2,3,4
+discontinuous_motifs	FALSE
+local_similarities	TRUE
+global_similarities	TRUE
+global_vgene	FALSE
+all_aa_interchangeable	FALSE
+cluster_min_size	2
+hla_cutoff	0.1
+n_cores	1
