@@ -1,0 +1,78 @@
+---
+title: "distance_matrix_beta"
+output: html_document
+date: "2024-04-25"
+---
+
+```{r}
+library(ape)  ## generate neighbor joining tree
+```
+
+```{r}
+# 定义文件路径
+ffc='/Users/lifushen/Desktop/giana_for_mouse/clean_beta--RotationEncodingBL62.txt'  ## GIANA standard output
+ffm='/Users/lifushen/Desktop/giana_for_mouse/clean_beta--RotationEncodingBL62.txt_EncodingMatrix.txt'  ## Output matrix with -M option
+
+d1=read.table(ffc, header=F,sep='\t',stringsAsFactors = F)
+Mat=read.table(ffm, header=F,sep='\t',stringsAsFactors = F)
+head(d1)
+head(Mat)
+```
+
+```{r}
+Mat=Mat[,c(1,4:100)]
+Mat <- unique(Mat)  # 确保数据框中没有重复行
+Mat <- Mat[!duplicated(Mat[,1]), ]  # 保证第一列没有重复的值
+rownames(Mat) <- Mat[,1]
+print(Mat)
+
+Mat=Mat[,2:98]
+print(Mat)
+
+d1=cbind(d1, Mat[d1[,1],])
+print(d1)
+
+map=d1[, c(1, 5)]
+write.table(map, "map_b_M.txt", sep="\t", row.names=FALSE, col.names=TRUE)
+```
+
+```{r}
+# 计算相关系数矩阵
+Mat.cor=cor(t(d1[, 7:102]))
+Mat.dist=sqrt(1-Mat.cor)
+head(Mat.dist)
+write.table(Mat.dist, file = "/Users/lifushen/Desktop/giana_for_mouse/Mat_dist_beta_M.txt", quote = FALSE, sep = "\t")
+```
+
+```{r}
+# 加载必要的库
+library(tidyverse)
+library(Rtsne)
+library(ggplot2)
+
+# 读取距离矩阵
+dist_matrix <- read.table("path_to_your_distance_matrix.txt", header = TRUE, row.names = 1)
+
+# 读取元数据，确保包含species, antigen species和antigen epitope
+metadata <- read.csv("path_to_your_metadata.csv")
+
+# 执行t-SNE
+set.seed(42)  # 设置随机种子以保证结果可重复
+tsne_results <- Rtsne(as.matrix(dist_matrix), dims = 2, perplexity = 30, verbose = TRUE)
+
+# 将t-SNE结果合并到元数据中
+tsne_data <- data.frame(tsne_results$Y)
+colnames(tsne_data) <- c("X1", "X2")
+tsne_data <- bind_cols(tsne_data, metadata)
+
+# 使用ggplot2进行可视化，根据antigen epitope着色，形状按species和antigen species组合区分
+ggplot(tsne_data, aes(x = X1, y = X2, color = antigen.epitope, shape = interaction(species, antigen.species))) +
+  geom_point(alpha = 0.5) +
+  labs(title = "t-SNE Visualization of CDR3 α Chains",
+       x = "t-SNE Dimension 1",
+       y = "t-SNE Dimension 2",
+       color = "Antigen Epitope",
+       shape = "Species and Antigen Species Interaction") +
+  theme_minimal() +
+  scale_shape_manual(values = seq(length(unique(tsne_data$antigen.species))))
+```
