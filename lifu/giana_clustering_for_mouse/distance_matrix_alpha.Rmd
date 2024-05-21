@@ -1,0 +1,53 @@
+---
+title: '123'
+output: pdf_document
+date: "2024-03-10"
+---
+
+```{r}
+library(ape)  ## generate neighbor joining tree
+```
+
+```{r}
+# 定义文件路径
+ffc='/Users/lifushen/Desktop/giana_for_mouse/clean_alpha--RotationEncodingBL62.txt'  ## GIANA standard output
+ffm='/Users/lifushen/Desktop/giana_for_mouse/clean_alpha--RotationEncodingBL62.txt_EncodingMatrix.txt'  ## Output matrix with -M option
+
+d1=read.table(ffc, header=F,sep='\t',stringsAsFactors = F)
+Mat=read.table(ffm, header=F,sep='\t',stringsAsFactors = F)
+head(d1)
+head(Mat)
+```
+
+```{r}
+Mat=Mat[,c(1,4:100)]
+Mat <- unique(Mat)  # 确保数据框中没有重复行
+Mat <- Mat[!duplicated(Mat[,1]), ]  # 保证第一列没有重复的值
+rownames(Mat) <- Mat[,1]
+print(Mat)
+
+Mat=Mat[,2:96]
+print(Mat)
+
+d1=cbind(d1, Mat[d1[,1],])
+print(d1)
+
+map=d1[, c(1, 5)]
+write.table(map, "map_a_M.txt", sep="\t", row.names=FALSE, col.names=TRUE)
+```
+
+```{r}
+
+```
+
+```{r}
+# 计算相关系数矩阵
+Mat.cor=cor(t(d1[, 7:100]))
+Mat.dist=sqrt(1-Mat.cor)
+head(Mat.dist)
+write.table(Mat.dist, file = "/Users/lifushen/Desktop/giana_for_mouse/Mat_dist_alpha_M.txt", quote = FALSE, sep = "\t")
+```
+
+```{r}
+
+```
